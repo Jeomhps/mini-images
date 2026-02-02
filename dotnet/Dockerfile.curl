@@ -38,9 +38,9 @@ COPY --from=mcr.microsoft.com/dotnet/aspnet:10.0-noble-chiseled / /rootfs/
 RUN chisel-wrapper --generate-dpkg-status /rootfs/var/lib/dpkg/status -- \
     --release ubuntu-24.04 --root /rootfs/ \
       curl_bins \
-      libicu74_libs \
-      tzdata-legacy_zoneinfo \
-      tzdata_zoneinfo
+      libicu74_libs
+      # tzdata-legacy_zoneinfo \
+      # tzdata_zoneinfo
 
 # Copier l'API depuis le stage build
 COPY --from=build /app /rootfs/app/
