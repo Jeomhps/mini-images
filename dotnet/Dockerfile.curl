@@ -57,3 +57,6 @@ USER app
 
 # Lancer l'API par défaut
 ENTRYPOINT ["dotnet", "./HelloWorldApi.dll"]
+
+#docker build -t dotnet10-chiselled-curl -f Dockerfile.curl .
+#docker run -p 8080:8080 dotnet10-chiselled-curl   
