@@ -1,21 +1,22 @@
-# Stage 1: Build de l'application
-FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:10.0 AS build
+# Stage 1: Build avec SDK
+FROM chainguard/dotnet-sdk:latest-dev AS build
 ARG TARGETARCH
-WORKDIR /source/HelloWorldApi
 
-# Copie et restauration des dépendances
-COPY --link HelloWorldApi/*.csproj .
+WORKDIR /tmp/build
+
+COPY HelloWorldApi/*.csproj ./
 RUN dotnet restore -a $TARGETARCH
 
-# Copie du code et publication
-COPY --link HelloWorldApi/ .
-RUN dotnet publish -c Release -a $TARGETARCH --no-restore -o /app
+COPY HelloWorldApi/ ./
 
-# Stage 2: Image finale avec DHI
-#FROM dhi.io/aspnetcore:10-alpine3.22
+RUN dotnet publish -c Release -a $TARGETARCH --no-restore -o /tmp/build/output
+
+# Stage 2: Runtime minimal Chainguard
 FROM chainguard/aspnet-runtime:latest
 WORKDIR /app
-COPY --link --from=build /app .
-USER $APP_UID
-ENTRYPOINT ["dotnet", "HelloWorldApi.dll"]
 
+COPY --from=build /tmp/build/output .
+
+USER 1000
+
+ENTRYPOINT ["dotnet", "HelloWorldApi.dll"]
