@@ -37,8 +37,8 @@ COPY --from=mcr.microsoft.com/dotnet/aspnet:10.0-noble-chiseled / /rootfs/
 # Ajouter curl via Chisel
 RUN chisel-wrapper --generate-dpkg-status /rootfs/var/lib/dpkg/status -- \
     --release ubuntu-24.04 --root /rootfs/ \
-      curl_bins \
-      libicu74_libs
+      curl_bins
+      # libicu74_libs
       # tzdata-legacy_zoneinfo \
       # tzdata_zoneinfo
 
@@ -49,6 +49,7 @@ COPY --from=build /app /rootfs/app/
 FROM scratch AS final
 COPY --link --from=chisel-setup /rootfs /
 
+ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=true
 ENV ASPNETCORE_URLS=http://+:8080
 ENV DOTNET_RUNNING_IN_CONTAINER=true
 
@@ -58,5 +59,8 @@ USER app
 # Lancer l'API par défaut
 ENTRYPOINT ["dotnet", "./HelloWorldApi.dll"]
 
-#docker build -t dotnet10-chiselled-curl -f Dockerfile.curl .
-#docker run -p 8080:8080 dotnet10-chiselled-curl   
+# ICU a été retiré pour réduire la taille de l’image 
+# au minimum (~207 MB), ce qui désactive la prise en 
+# charge complète des cultures ; le formatage des dates,
+# nombres et textes sensibles à la langue utilisera 
+# désormais la culture invariante.
