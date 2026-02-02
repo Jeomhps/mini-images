@@ -1,5 +1,6 @@
 # Stage 1: Build de l'application
-FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:10.0 AS build
+#FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:10.0 AS build
+FROM dhi.io/dotnet:10-sdk AS build
 ARG TARGETARCH
 WORKDIR /source/HelloWorldApi
 
@@ -15,7 +16,6 @@ RUN dotnet publish -c Release -a $TARGETARCH --no-restore -o /app
 FROM dhi.io/aspnetcore:10-alpine3.22
 WORKDIR /app
 COPY --link --from=build /app .
-#USER $APP_UID
-USER app
+USER 1000
 ENTRYPOINT ["dotnet", "HelloWorldApi.dll"]
 
