@@ -1,5 +1,5 @@
 # Stage 1: Build de l'application avec Node.js (pour compiler TypeScript)
-FROM node:20-alpine AS build
+FROM node:25-alpine AS build
 
 WORKDIR /app
 
@@ -11,7 +11,7 @@ COPY node-api/tsconfig.json ./
 RUN npm run build
 
 # Stage 2: Image finale légère avec Alpine
-FROM node:20-alpine
+FROM node:25-alpine
 
 WORKDIR /app
 
