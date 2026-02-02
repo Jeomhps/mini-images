@@ -1,0 +1,22 @@
+# Stage 1: Build de l'application avec Node.js (pour compiler TypeScript)
+FROM dhi.io/node:25-alpine3.22-dev AS build-env
+
+WORKDIR /app
+
+COPY node-api/package*.json ./
+RUN npm ci
+
+COPY node-api/tsconfig.json ./
+COPY node-api/src/ ./src/
+RUN npm run build
+
+# Stage 2: Image finale avec Chainguard
+FROM dhi.io/node:25-alpine3.23
+
+WORKDIR /app
+
+COPY --from=build-env /app/dist ./dist
+COPY --from=build-env /app/package*.json ./
+COPY --from=build-env /app/node_modules ./node_modules
+
+CMD ["node", "dist/server.js"]
