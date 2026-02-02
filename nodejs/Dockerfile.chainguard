@@ -1,5 +1,6 @@
 # Stage 1: Build de l'application avec Node.js (pour compiler TypeScript)
-FROM cgr.dev/chainguard/node:latest-dev AS build-env
+#FROM cgr.dev/chainguard/node:latest-dev AS build-env
+FROM chainguard/node:latest-dev AS build-env
 
 WORKDIR /app
 
@@ -11,7 +12,8 @@ COPY node-api/src/ ./src/
 RUN npm run build
 
 # Stage 2: Image finale avec Chainguard
-FROM cgr.dev/chainguard/node:latest
+#FROM cgr.dev/chainguard/node:latest
+FROM chainguard/node:latest
 
 WORKDIR /app
 
