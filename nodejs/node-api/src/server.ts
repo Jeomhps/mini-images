@@ -19,6 +19,11 @@ app.post('/echo', (req: Request, res: Response) => {
   res.json({ received: req.body });
 });
 
+process.on('SIGINT', () => {
+  console.log('Received SIGINT. Shutting down gracefully...');
+  process.exit(0);
+});
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
