@@ -1,0 +1,42 @@
+# Stage 1: Build de l'application avec Node.js (pour compiler TypeScript)
+#FROM cgr.dev/chainguard/node:latest-dev AS build-env
+FROM chainguard/node:latest-dev AS build-env
+
+WORKDIR /app
+
+RUN apk add --no-cache curl   # si l'image est alpine-based
+USER 1000
+
+COPY node-api/package*.json ./
+RUN npm ci
+
+COPY node-api/tsconfig.json ./
+COPY node-api/src/ ./src/
+RUN npm run build
+
+
+USER root
+RUN apk add --no-cache curl   # si l'image est alpine-based
+
+# Stage 2: Image finale avec Chainguard
+#FROM cgr.dev/chainguard/node:latest
+FROM chainguard/node:latest
+
+WORKDIR /app
+
+COPY --from=build-env /app/dist ./dist
+COPY --from=build-env /app/package*.json ./
+COPY --from=build-env /app/node_modules ./node_modules
+
+COPY --from=build-env /usr/bin/curl /usr/bin/curl
+COPY --from=build-env /lib /lib
+
+# Only dist because the image already defines 
+# Entrypoint NODE by default so adding it to 
+# Command result in a repetition of node and a 
+# crash.
+CMD ["dist/server.js"]
+
+# also chianguard node image do include a shell
+# but no package manager compared to some of its 
+# counterparts.
