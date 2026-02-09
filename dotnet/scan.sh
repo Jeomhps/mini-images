@@ -1,5 +1,5 @@
-trivy image alpine
-trivy image chisel
-trivy image chisel-curl
-trivy image chainguard
-trivy image dhi
+trivy image dotnet-alpine
+trivy image dotnet-chisel
+trivy image dotnet-chisel-curl
+trivy image dotnet-chainguard
+trivy image dotnet-dhi
