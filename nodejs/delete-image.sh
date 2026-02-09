@@ -1,1 +1,1 @@
-docker rmi -f node-{chainguard,alpine,dhi,google}
+docker rmi -f node-{chainguard,chainguard-curl,alpine,dhi,google}

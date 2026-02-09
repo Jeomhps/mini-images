@@ -4,6 +4,7 @@ set -e
 IMAGES=(
   "node-alpine"
   "node-chainguard"
+  "node-chainguard-curl"
   "node-dhi"
   "node-google"
 )
