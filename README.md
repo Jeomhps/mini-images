@@ -102,3 +102,10 @@ Vulnerability scanning scripts are provided:
 | Distroless | Minimal | High | Medium |
 | Chainguard | none | Very High | Medium |
 | Custom (chisel) | Small | depends | High |
+
+
+## Test curl
+
+```sh
+docker run -it --rm --entrypoint="" node-chainguard-curl curl --version
+```
