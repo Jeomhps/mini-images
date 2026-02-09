@@ -4,8 +4,8 @@ FROM chainguard/node:latest-dev AS build-env
 
 WORKDIR /app
 
-RUN apk add --no-cache curl   # si l'image est alpine-based
-USER 1000
+# RUN apk add --no-cache curl   # si l'image est alpine-based
+# USER 1000
 
 COPY node-api/package*.json ./
 RUN npm ci
@@ -16,10 +16,11 @@ RUN npm run build
 
 
 USER root
-RUN apk add --no-cache curl   # si l'image est alpine-based
+# RUN apk add --no-cache curl
+RUN apk add --no-cache curl && \
+    ls -la /usr/bin/curl
 
 # Stage 2: Image finale avec Chainguard
-#FROM cgr.dev/chainguard/node:latest
 FROM chainguard/node:latest
 
 WORKDIR /app
